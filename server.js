@@ -1,13 +1,18 @@
 const express = require('express')
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
+const bodyparser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const User = require('./models/user')
 const app = express()
 require('dotenv').config()
 
-/**
- * Basic way to handle routings
- */
+// app use
+app.use(bodyparser.urlencoded({extended: false}))
+app.use(bodyparser.json())
+app.use(cookieParser())
+
 app.get('/', (req, res) => {
-  res.send('Poopsd!')
+  res.status(200).send('Welcome to CodeRARE API')
 })
 
 mongoose
