@@ -1,29 +1,53 @@
-// TEST DATA
-let users = {
-    1: {
-      id: '1',
-      username: 'Robin Wieruch',
-    },
-    2: {
-      id: '2',
-      username: 'Dave Davids',
-    },
-};
-  
-let messages = {
-1: {
-    id: '1',
-    text: 'Hello World',
-    userId: '1',
-},
-2: {
-    id: '2',
-    text: 'By World',
-    userId: '2',
-},
-};
+const mongoose = require("mongoose");
 
-export default {
-    users,
-    messages,
-};
+const bcrypt = require("bcrypt");
+
+const opts = { timestamps: true };
+
+const userSchema = new mongoose.Schema(
+  {
+    fullName: {
+      type: String,
+      required: true,
+      minlength: 3,
+    },
+    userName: {
+      type: String,
+      required: true,
+      minlength: 3,
+      index: { unique: true },
+    },
+    bio: {
+      type: String,
+      default: "",
+    },
+    password: {
+      type: String,
+      required: true,
+      select: false
+    }
+  }, opts
+)
+
+userSchema.pre("save", function(next) {
+  let user = this;
+  if (!user.isModified("password")) return next();
+
+  // generate a salt
+  bcrypt.genSalt(10, function(err, salt) {
+    if (err) return next(err);
+
+    // hash the password using our new salt
+    bcrypt.hash(user.password, salt, function(err, hash) {
+      if (err) return next(err);
+      // override the cleartext password with the hashed one
+      user.password = hash;
+
+      next();
+    });
+  } );
+});
+
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;

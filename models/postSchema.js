@@ -1,22 +1,27 @@
-import mongoose from "mongoose";
+//bring in mongoose so we can create a schema that represents the data for a Post
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema;
+const opts = { toJSON: { virtuals: true}, id: false, timestamps: { createdAt: true, updatedAt: false } };
+const postSchema = new mongoose.Schema({
+    text: {
+        type: String,
+        required: true,
+        minlength: 1
+    },
+    username: {
+        type: String,
+        required: true,
+        minlength: 3
+    },
+}, opts)
 
-const PostSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Reference to the User who created the post
-  content: { type: String, required: true },
-  likes: [{ type: Schema.Types.ObjectId, ref: 'User' }], // References to Users who liked the post
-  createdAt: { type: Date, default: Date.now },
+postSchema.virtual('likes', {
+    ref: 'Like',
+    localField: '_id',
+    foreignField: 'postId'
 });
 
-module.exports = mongoose.model('Post', PostSchema);
+const Post = mongoose.model('Post', postSchema);
 
-
-// If wanted
-//   comments: [
-//     {
-//       user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-//       text: { type: String, required: true },
-//       createdAt: { type: Date, default: Date.now },
-//     }
-//   ],
+//export our model
+module.exports = Post;
