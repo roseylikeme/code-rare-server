@@ -100,23 +100,13 @@ const postController = {
     },
     //method to get all users using async/await syntax
     deletePost: async function(req, res){
-
-        //using a try/catch since we are using asyn/await and want to catch any errors if the code in the try block fails
         try {
-
-            //get the email address of the user from the url parameters
             const postId = req.params.postId;
-            
-            //use our model to find the user that match a query.
-            //{email: some@email.com} is the current query which really mean find the user with that email
-            //we use await here since this is an async process and we want the code to wait for this to finish before moving on to the next line of code
-            let foundPost = await Post.findById(postId)
 
+            let foundPost = await Post.findById(postId)
             //if we found the user, return that user otherwise return a 404
             if(foundPost){
-                Post.deleteOne(foundPost, (error) => {
-                        if (error) throw error
-                    });
+                await Post.deleteOne(foundPost);
 
                 res.status(202).send({ message: "Post deleted", statusCode: res.statusCode });
             }else{
@@ -133,7 +123,6 @@ const postController = {
                 message: error.message,
                 statusCode: res.statusCode
             })
-
         }
     }
 }
