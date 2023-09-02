@@ -3,6 +3,8 @@ info:
   title: CodeRARE API
   version: "1.0.0"
 servers:
+  - url: https://code-rare-servers-923a148ef3c1.herokuapp.com/docs/
+    description: Heroku
   - url: http://localhost:3000
     description: localhost
 components:
