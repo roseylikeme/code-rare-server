@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require("cors")
+const PORT = process.env.PORT || 3000;
 
 const auth = require("./auth");
 
@@ -15,8 +16,8 @@ mongoose
 .connect(process.env.MONGO_URL)
 .then(() => {
     console.log('Connected to MongoDB')
-    app.listen(process.env.PORT, () => {
-        console.log(`App is running on port ${process.env.PORT}`)
+    app.listen(PORT, () => {
+        console.log(`App is running on port ${PORT}`)
     })
 })
 .catch((err) => {
