@@ -54,6 +54,7 @@ const userController = {
             } else { 
                 Object.assign(user, newUserData)
                 await user.save()
+                res.json(user)
             }
         } catch (err) {
             console.log("failed to update user: " + err)
