@@ -47,8 +47,6 @@ const authController = {
       await req.logout();
       res.status(204).send()
     }
-    
-
 }
 
 module.exports = authController;
